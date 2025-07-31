@@ -52,13 +52,6 @@ Since the extension is not yet on the Chrome Web Store, you can install it local
 *   `content.js`: The script injected into pages to listen for user interactions.
 *   `*.png`: Icon files for the different states of the extension.
 
-## Future Plans (Roadmap) 🗺️
-
--   [ ] Add an option to take screenshots for each step.
--   [ ] Export steps to popular formats (e.g., Markdown, CSV).
--   [ ] Allow editing and adding notes to recorded steps.
--   [ ] Integrate with popular task management tools (e.g., Jira, Trello).
-
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
