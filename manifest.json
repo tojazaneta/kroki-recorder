@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Kroki Recorder",
+  "version": "1.0",
+  "description": "Records user interaction steps for QA and testing purposes.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "debugger",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon-128.png"
+    },
+    "default_title": "Kroki Recorder"
+  },
+  "icons": {
+    "128": "icon-128.png"
+  }
+}
