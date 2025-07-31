@@ -1,11 +1,10 @@
-# kroki-recorder
 # Kroki Recorder 🕵️‍♀️
 
 A simple yet powerful Chrome extension designed for manual testers and QA specialists. This tool automatically records user interactions, console errors, and network issues to speed up the process of creating test cases and reporting bugs.
 
 <br>
 
-
+![](kroki.gif)
 
 ## Key Features ✨
 
@@ -22,6 +21,7 @@ A simple yet powerful Chrome extension designed for manual testers and QA specia
 *   **QA Specialists:** For precisely reporting bug reproduction steps.
 *   **Developers:** For easily reproducing issues reported by users.
 *   **Product Owners / PMs:** For documenting the behavior of new features.
+*   **Everyone:** :)
 
 ## Installation 🛠️
 
