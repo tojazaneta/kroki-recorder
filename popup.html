@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kroki Recorder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --light-bg: #F5F5F5;
+      --light-surface: #FFFFFF;
+      --primary-text: #222222;
+      --secondary-text: #5F6A7D;
+      --accent-blue: #2872e9;
+      --accent-red: #cc4255;
+      --accent-yellow: #f7dc77;
+      --divider: #E0E0E0;
+    }
+
+    body {
+      width: 450px;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--primary-text);
+      padding: 16px;
+      margin: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 16px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.09), 0 3px 1px -2px rgba(0,0,0,0.08), 0 1px 5px 0 rgba(0,0,0,0.13);
+      transition: background-color 0.2s, box-shadow 0.2s;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    #start-recording { background-color: var(--accent-blue);}
+    #start-recording:hover { background-color: #3888fa;}
+    #stop-recording { background-color: var(--accent-red);}
+    #stop-recording:hover { background-color: #d94b56;}
+    #pause-recording { background-color: var(--accent-yellow); color:#222;}
+    #pause-recording:hover { background-color: #ffe599;}
+    #pause-recording.resume { background-color: var(--accent-blue); color:#fff;}
+    #pause-recording.resume:hover { background-color: #3888fa;}
+    #clear-logs { background-color: #999; color: white; padding: 10px 14px; border-radius: 4px;}
+    #clear-logs:hover:not(:disabled) { background-color: #bbb;}
+    #clear-logs:disabled { background-color: #ccc; cursor: not-allowed;}
+
+    button:active { box-shadow: none; transform: translateY(1px);}
+    button:disabled { background-color: #DDD !important; color: #999 !important; cursor: not-allowed; box-shadow: none;}
+
+    label {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+      margin-left: auto;
+    }
+    label input[type="checkbox"] {
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+      margin-right: 6px;
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--divider);
+      margin-bottom: 8px;
+    }
+    .tab-button {
+      background: none;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 14px 16px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--secondary-text);
+      position: relative;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-bottom-color 0.2s, background-color 0.2s;
+      flex: 1;
+      text-align: center;
+      user-select: none;
+    }
+    .tab-button.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+      background: var(--light-surface);
+    }
+    .tab-button:hover:not(.active) {
+      background: #F0F6FF;
+      color: var(--primary-text);
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 16px;
+      background-color: var(--light-surface);
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--primary-text);
+      border: 1px solid var(--divider);
+      border-top: none;
+      box-sizing: border-box;
+      padding-bottom: 50px; /* space for copy button */
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .tab-content.active { display: block; }
+    .badge { position: absolute; top: 5px; right: 10px; background: var(--accent-red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: 500; text-align: center; line-height: 18px; pointer-events: none; user-select: none;}
+    #network-container > * { border-bottom: 1px dashed #bdbdbd; padding-bottom: 6px; margin-bottom: 6px;}
+    #network-container > *:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+    #console-container > * { border-bottom: 1px dashed #bdbdbd; padding-bottom: 6px; margin-bottom: 6px;}
+    #console-container > *:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+    
+    .copy-button { position: fixed; bottom: 12px; right: 12px; padding: 6px 12px; font-size: 12px; border-radius: 4px; background-color: var(--accent-blue); color: #fff; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3); cursor: pointer; transition: background-color 0.2s ease; z-index: 1000; text-transform: none;}
+    .copy-button:hover { background-color: #3888fa;}
+    .copy-button:active { box-shadow: none; transform: translateY(1px);}
+    .copy-button:disabled { background-color: #AAA; cursor: not-allowed;}
+
+    /* DARK THEME */
+    body.dark-theme { background-color: #212121; color: #E0E0E0;}
+    body.dark-theme .tab-content { background-color: #333333; color: #E0E0E0; border-color: #444444;}
+    body.dark-theme .tabs { border-bottom-color: #444;}
+    body.dark-theme .tab-button.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background-color: #212121;}
+    body.dark-theme button { box-shadow: 0 2px 2px 0 rgba(0,0,0,0.5), 0 3px 1px -2px rgba(0,0,0,0.4), 0 1px 5px 0 rgba(0,0,0,0.6);}
+    body.dark-theme #start-recording, body.dark-theme #pause-recording.resume, body.dark-theme .copy-button { background-color: var(--accent-blue); color: #fff;}
+    body.dark-theme #start-recording:hover, body.dark-theme #pause-recording.resume:hover, body.dark-theme .copy-button:hover { background-color: #3a89ff;}
+    body.dark-theme #stop-recording { background-color: var(--accent-red);}
+    body.dark-theme #stop-recording:hover { background-color: #d94b56;}
+    body.dark-theme #pause-recording { background-color: var(--accent-yellow); color: #222;}
+    body.dark-theme #pause-recording:hover { background-color: #ffe599;}
+    body.dark-theme .tab-button { color: #aaa;}
+    body.dark-theme .tab-button:hover:not(.active) { background-color: #2c3e50; color: #ecf0f1;}
+  </style>
+</head>
+<body>
+  <h1>Kroki Recorder</h1>
+
+  <div class="controls">
+    <button id="start-recording">Start</button>
+    <button id="pause-recording" disabled>Pause</button>
+    <button id="stop-recording" disabled>Stop</button>
+    <button id="clear-logs">Clear logs</button>
+    <label>
+      <input type="checkbox" id="theme-toggle" aria-label="Toggle dark theme" />
+      Dark theme
+    </label>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-button active" data-tab="steps" aria-selected="true" role="tab" tabindex="0">Steps</button>
+    <button class="tab-button" data-tab="console" aria-selected="false" role="tab" tabindex="-1">
+      Console <span class="badge" id="console-badge" style="display:none;">0</span>
+    </button>
+    <button class="tab-button" data-tab="network" aria-selected="false" role="tab" tabindex="-1">
+      Network <span class="badge" id="network-badge" style="display:none;">0</span>
+    </button>
+  </div>
+
+  <div id="steps-container" class="tab-content active" role="tabpanel" tabindex="0"></div>
+  <div id="console-container" class="tab-content" role="tabpanel" tabindex="-1"></div>
+  <div id="network-container" class="tab-content" role="tabpanel" tabindex="-1"></div>
+
+  <button id="copy-steps" class="copy-button">Copy</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>
